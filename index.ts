@@ -1,9 +1,15 @@
 import express, { Express, Request, Response } from "express";
 import path from "path";
 import sequelize from "./config/database";
-
-import UserController from "./controllers/user_controller";
-import userRoute from "./routes/user_routes";
+import { Pool } from "pg";
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "usm_ts",
+  password: "qwerty",
+  port: 5432,
+});
+import UserRoute from "./routes/user_routes";
 
 const app = express();
 
@@ -17,7 +23,7 @@ app.set("views", [
 ]);
 
 // user side.
-app.use("/", userRoute);
+app.use("/", UserRoute);
 
 sequelize
   .sync({ force: false })
