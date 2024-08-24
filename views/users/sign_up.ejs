@@ -22,7 +22,9 @@
     /><br />
     <span id="confirm-password-error" class="error-message"></span><br />
 
-    <input id="profile-image" type="file" accept="image/*" /><br />
+    <button id="upload-image-button" class="upload-button">
+      Upload Profile Image</button
+    ><br />
     <span id="image-error" class="error-message"></span><br />
 
     <button id="register-button" class="login_button">Register</button>
@@ -33,222 +35,13 @@
 </div>
 <%- include('../partials/footer') %>
 
-<!-- Form Validation Script -->
-<!-- <script>
-  // Get references to input fields and error message spans
-  const nameInput = document.getElementById("name");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirm-password");
-
-  const nameError = document.getElementById("name-error");
-  const emailError = document.getElementById("email-error");
-  const passwordError = document.getElementById("password-error");
-  const confirmPasswordError = document.getElementById(
-    "confirm-password-error"
-  );
-
-  // Helper function to validate email format
-  function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
-  // Validate Name on blur
-  nameInput.addEventListener("blur", () => {
-    const name = nameInput.value.trim();
-    if (name === "") {
-      nameError.textContent = "Name is required.";
-    } else {
-      nameError.textContent = "";
-    }
-  });
-
-  // Validate Email on blur
-  emailInput.addEventListener("blur", async () => {
-    const email = emailInput.value.trim();
-    emailError.textContent = "";
-
-    if (email === "") {
-      emailError.textContent = "Email is required.";
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      emailError.textContent = "Please enter a valid email address.";
-      return;
-    }
-
-    // Check if email already exists in the database
-    try {
-      const response = await fetch("/check-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      const result = await response.json();
-
-      if (result.exists) {
-        emailError.textContent = "Email is already taken.";
-      } else {
-        emailError.textContent = "";
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      emailError.textContent = "Error checking email. Please try again later.";
-    }
-  });
-
-  // Validate Password on blur
-  passwordInput.addEventListener("blur", () => {
-    const password = passwordInput.value;
-    passwordError.textContent = "";
-
-    if (password === "") {
-      passwordError.textContent = "Password is required.";
-      return;
-    }
-
-    if (password.length < 6) {
-      passwordError.textContent =
-        "Password must be at least 6 characters long.";
-      return;
-    }
-
-    // Additional password strength checks can be added here
-  });
-
-  // Validate Confirm Password on blur
-  confirmPasswordInput.addEventListener("blur", () => {
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
-    confirmPasswordError.textContent = "";
-
-    if (confirmPassword === "") {
-      confirmPasswordError.textContent = "Please confirm your password.";
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      confirmPasswordError.textContent = "Passwords do not match.";
-    } else {
-      confirmPasswordError.textContent = "";
-    }
-  });
-
-  // Handle Register Button Click
-  document
-    .getElementById("register-button")
-    .addEventListener("click", async (event) => {
-      event.preventDefault();
-
-      // Get input values
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      const confirmPassword = confirmPasswordInput.value;
-
-      let valid = true;
-
-      // Validate Name
-      if (name === "") {
-        nameError.textContent = "Name is required.";
-        valid = false;
-      } else {
-        nameError.textContent = "";
-      }
-
-      // Validate Email
-      if (email === "") {
-        emailError.textContent = "Email is required.";
-        valid = false;
-      } else if (!isValidEmail(email)) {
-        emailError.textContent = "Please enter a valid email address.";
-        valid = false;
-      } else {
-        try {
-          const response = await fetch("/check-email", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
-          });
-          const result = await response.json();
-
-          if (result.exists) {
-            emailError.textContent = "Email is already taken.";
-            valid = false;
-          } else {
-            emailError.textContent = "";
-          }
-        } catch (error) {
-          console.error("Error checking email:", error);
-          emailError.textContent =
-            "Error checking email. Please try again later.";
-          valid = false;
-        }
-      }
-
-      // Validate Password
-      if (password === "") {
-        passwordError.textContent = "Password is required.";
-        valid = false;
-      } else if (password.length < 6) {
-        passwordError.textContent =
-          "Password must be at least 6 characters long.";
-        valid = false;
-      } else {
-        passwordError.textContent = "";
-      }
-
-      // Validate Confirm Password
-      if (confirmPassword === "") {
-        confirmPasswordError.textContent = "Please confirm your password.";
-        valid = false;
-      } else if (password !== confirmPassword) {
-        confirmPasswordError.textContent = "Passwords do not match.";
-        valid = false;
-      } else {
-        confirmPasswordError.textContent = "";
-      }
-
-      if (!valid) {
-        return;
-      }
-
-      // Submit registration data
-      try {
-        const registrationResponse = await fetch("/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, email, password }),
-        });
-
-        if (registrationResponse.ok) {
-          window.location.href = "/login";
-        } else {
-          alert("Registration failed. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error registering user:", error);
-        alert("An error occurred during registration. Please try again later.");
-      }
-    });
-</script> -->
-
 <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 <script>
-  // Get references to input fields and error message spans
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirm-password");
-  const profileImageInput = document.getElementById("profile-image");
+  const uploadImageButton = document.getElementById("upload-image-button");
 
   const nameError = document.getElementById("name-error");
   const emailError = document.getElementById("email-error");
@@ -260,7 +53,6 @@
 
   let uploadedImageUrl = "";
 
-  // Initialize Cloudinary upload widget
   const uploadWidget = cloudinary.createUploadWidget(
     {
       cloudName: "dqjjysikb",
@@ -278,18 +70,15 @@
     }
   );
 
-  // Open upload widget on file input change
-  profileImageInput.addEventListener("change", () => {
+  uploadImageButton.addEventListener("click", () => {
     uploadWidget.open();
   });
 
-  // Helper function to validate email format
   function isValidEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }
 
-  // Validate Name on blur
   nameInput.addEventListener("blur", () => {
     const name = nameInput.value.trim();
     if (name === "") {
@@ -299,7 +88,6 @@
     }
   });
 
-  // Validate Email on blur
   emailInput.addEventListener("blur", async () => {
     const email = emailInput.value.trim();
     emailError.textContent = "";
@@ -314,7 +102,6 @@
       return;
     }
 
-    // Check if email already exists in the database
     try {
       const response = await fetch("/check-email", {
         method: "POST",
@@ -336,7 +123,6 @@
     }
   });
 
-  // Validate Password on blur
   passwordInput.addEventListener("blur", () => {
     const password = passwordInput.value;
     passwordError.textContent = "";
@@ -353,7 +139,6 @@
     }
   });
 
-  // Validate Confirm Password on blur
   confirmPasswordInput.addEventListener("blur", () => {
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
@@ -371,120 +156,11 @@
     }
   });
 
-  // Handle Register Button Click
-  // document
-  //   .getElementById("register-button")
-  //   .addEventListener("click", async (event) => {
-  //     event.preventDefault();
-
-  //     // Get input values
-  //     const name = nameInput.value.trim();
-  //     const email = emailInput.value.trim();
-  //     const password = passwordInput.value;
-  //     const confirmPassword = confirmPasswordInput.value;
-
-  //     let valid = true;
-
-  //     // Validate Name
-  //     if (name === "") {
-  //       nameError.textContent = "Name is required.";
-  //       valid = false;
-  //     } else {
-  //       nameError.textContent = "";
-  //     }
-
-  //     // Validate Email
-  //     if (email === "") {
-  //       emailError.textContent = "Email is required.";
-  //       valid = false;
-  //     } else if (!isValidEmail(email)) {
-  //       emailError.textContent = "Please enter a valid email address.";
-  //       valid = false;
-  //     } else {
-  //       try {
-  //         const response = await fetch("/check-email", {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({ email }),
-  //         });
-  //         const result = await response.json();
-
-  //         if (result.exists) {
-  //           emailError.textContent = "Email is already taken.";
-  //           valid = false;
-  //         } else {
-  //           emailError.textContent = "";
-  //         }
-  //       } catch (error) {
-  //         console.error("Error checking email:", error);
-  //         emailError.textContent = "Error checking email. Please try again later.";
-  //         valid = false;
-  //       }
-  //     }
-
-  //     // Validate Password
-  //     if (password === "") {
-  //       passwordError.textContent = "Password is required.";
-  //       valid = false;
-  //     } else if (password.length < 6) {
-  //       passwordError.textContent = "Password must be at least 6 characters long.";
-  //       valid = false;
-  //     } else {
-  //       passwordError.textContent = "";
-  //     }
-
-  //     // Validate Confirm Password
-  //     if (confirmPassword === "") {
-  //       confirmPasswordError.textContent = "Please confirm your password.";
-  //       valid = false;
-  //     } else if (password !== confirmPassword) {
-  //       confirmPasswordError.textContent = "Passwords do not match.";
-  //       valid = false;
-  //     } else {
-  //       confirmPasswordError.textContent = "";
-  //     }
-
-  //     // Check if an image was uploaded
-  //     if (!uploadedImageUrl) {
-  //       imageError.textContent = "Profile image is required.";
-  //       valid = false;
-  //     } else {
-  //       imageError.textContent = "";
-  //     }
-
-  //     if (!valid) {
-  //       return;
-  //     }
-
-  //     // Submit registration data
-  //     try {
-  //       const registrationResponse = await fetch("/", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ name, email, password, profileImage: uploadedImageUrl }),
-  //       });
-
-  //       if (registrationResponse.ok) {
-  //         window.location.href = "/login";
-  //       } else {
-  //         alert("Registration failed. Please try again.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error registering user:", error);
-  //       alert("An error occurred during registration. Please try again later.");
-  //     }
-  //   });
-
   document
     .getElementById("register-button")
     .addEventListener("click", async (event) => {
       event.preventDefault();
 
-      // Get input values
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
       const password = passwordInput.value;
@@ -492,7 +168,6 @@
 
       let valid = true;
 
-      // Validate Name
       if (name === "") {
         nameError.textContent = "Name is required.";
         valid = false;
@@ -500,7 +175,6 @@
         nameError.textContent = "";
       }
 
-      // Validate Email
       if (email === "") {
         emailError.textContent = "Email is required.";
         valid = false;
@@ -532,7 +206,6 @@
         }
       }
 
-      // Validate Password
       if (password === "") {
         passwordError.textContent = "Password is required.";
         valid = false;
@@ -544,7 +217,6 @@
         passwordError.textContent = "";
       }
 
-      // Validate Confirm Password
       if (confirmPassword === "") {
         confirmPasswordError.textContent = "Please confirm your password.";
         valid = false;
@@ -555,7 +227,6 @@
         confirmPasswordError.textContent = "";
       }
 
-      // Check if an image was uploaded
       if (!uploadedImageUrl) {
         imageError.textContent = "Profile image is required.";
         valid = false;
@@ -567,7 +238,6 @@
         return;
       }
 
-      // Submit registration data
       try {
         const registrationResponse = await fetch("/", {
           method: "POST",
