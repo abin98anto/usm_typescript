@@ -138,6 +138,30 @@ async function create_user(req: Request, res: Response) {
   }
 }
 
+async function verify_login(req: Request, res: Response) {
+  const { email, password } = req.body;
+
+  try {
+    const hashPassword = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1 AND password = $2",
+      [email, hashPassword]
+    );
+    const exists = result.rowCount !== null && result.rowCount > 0;
+    if (exists) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+}
 
 export default {
   render_signup,
@@ -145,4 +169,5 @@ export default {
   render_user_dashboard,
   create_user,
   check_email,
+  verify_login,
 };
