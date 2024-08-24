@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import User from "../models/user_model";
 import crypto from "crypto";
 import { Pool } from "pg";
+import cloudinary from "cloudinary";
+
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
@@ -10,40 +11,22 @@ const pool = new Pool({
   port: 5432,
 });
 
+// Render sign up page / landing page.
 function render_signup(req: Request, res: Response) {
   return res.render("sign_up");
 }
 
+// Render login page.
 function render_user_login(req: Request, res: Response) {
   return res.render("user_login");
 }
 
+// Render user dashboard page.
 function render_user_dashboard(req: Request, res: Response) {
   return res.render("user_dashboard");
 }
 
-// function create_user(req: Request, res: Response) {
-//   try {
-//     const { username, email, password } = req.body;
-
-//     const hashPassword = crypto
-//       .createHash("sha256")
-//       .update(password)
-//       .digest("hex");
-
-//     const user = User.create({
-//       username,
-//       email,
-//       password: hashPassword,
-//     });
-
-//     res.redirect("/login");
-//   } catch (error) {
-//     console.log("Error in create_user", error);
-//     return;
-//   }
-// }
-
+// To check if email exists in our database.
 async function check_email(req: Request, res: Response) {
   const { email } = req.body;
 
@@ -59,25 +42,102 @@ async function check_email(req: Request, res: Response) {
   }
 }
 
+// Create new user.
+// async function create_user(req: Request, res: Response) {
+//   const { name, email, password, image } = req.body;
+
+//   try {
+//     const username = name;
+
+//     const hashPassword = crypto
+//       .createHash("sha256")
+//       .update(password)
+//       .digest("hex");
+
+//     const uploadResponse = await cloudinary.v2.uploader.upload(image, {
+//       folder: "user_images",
+//     });
+
+//     const imageUrl = uploadResponse.secure_url;
+
+//     await pool.query(
+//       "INSERT INTO users (username, email, password, isAdmin) VALUES ($1, $2, $3, $4)",
+//       [username, email, hashPassword, false, imageUrl]
+//     );
+
+//     res.status(200).send();
+//   } catch (error) {
+//     console.error("Error registering user:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
+
+// Create new user.
+// async function create_user(req: Request, res: Response) {
+//   console.log("1");
+
+//   const { name, email, password, image } = req.body;
+//   console.log("2");
+
+//   //   if (!image) {
+//   //       console.log("3");
+//   //     return res.status(400).json({ error: "Image is required." });
+//   //   }
+
+//   try {
+//     const username = name;
+
+//     const hashPassword = crypto
+//       .createHash("sha256")
+//       .update(password)
+//       .digest("hex");
+//     console.log("4");
+
+//     const uploadResponse = await cloudinary.v2.uploader.upload(image, {
+//       folder: "Home",
+//       upload_preset: "gkrbyxgv",
+//     });
+
+//     console.log("5");
+
+//     const imageUrl = uploadResponse.secure_url;
+//     console.log("5");
+//     await pool.query(
+//       "INSERT INTO users (username, email, password, isAdmin, imageUrl) VALUES ($1, $2, $3, $4, $5)",
+//       [username, email, hashPassword, false, imageUrl]
+//     );
+//     console.log("6");
+//     res.status(200).send();
+//   } catch (error) {
+//     console.error("Error registering user:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
+
 async function create_user(req: Request, res: Response) {
-  const { name, email, password } = req.body;
+  const { name, email, password, profileImage } = req.body;
 
   try {
     const username = name;
+
     const hashPassword = crypto
       .createHash("sha256")
       .update(password)
       .digest("hex");
+
+    // Insert the new user into the database with the image URL from Cloudinary
     await pool.query(
-      "INSERT INTO users (username, email, password, isAdmin) VALUES ($1, $2, $3, $4)",
-      [username, email, hashPassword, false]
+      "INSERT INTO users (username, email, password, isAdmin, imageUrl) VALUES ($1, $2, $3, $4, $5)",
+      [username, email, hashPassword, false, profileImage]
     );
+
     res.status(200).send();
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
 
 export default {
   render_signup,

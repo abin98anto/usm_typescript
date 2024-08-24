@@ -7,6 +7,7 @@ class User extends Model {
   public email!: string;
   public password!: string;
   public isAdmin!: boolean;
+  public imageUrl!: string;
   public readonly createdOn!: Date;
 }
 
@@ -34,6 +35,10 @@ User.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     createdOn: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -42,6 +47,7 @@ User.init(
   {
     sequelize,
     modelName: "User",
+    tableName: "users",
   }
 );
 

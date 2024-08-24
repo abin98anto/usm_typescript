@@ -2,6 +2,14 @@ import express, { Express, Request, Response } from "express";
 import path from "path";
 import sequelize from "./config/database";
 import { Pool } from "pg";
+import cloudinary from "cloudinary";
+
+cloudinary.v2.config({
+  cloud_name: "dqjjysikb",
+  api_key: "693894612636766",
+  api_secret: "yJTpRqj1xwIC1KrJ6c1twQdq2qU",
+});
+
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
