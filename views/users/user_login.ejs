@@ -19,11 +19,8 @@
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const loginButton = document.getElementById("login-button");
-  const emailError = document.getElementById("email-error"); // Not used, remove if not needed
-  const passwordError = document.getElementById("password-error"); // Not used, remove if not needed
-  const loginError = document.getElementById("error-message"); // Updated selector
+  const loginError = document.getElementById("error-message");
 
-  // Validate email format
   function isValidEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -34,8 +31,8 @@
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
-
     let valid = true;
+    loginError.textContent = "";
 
     if (email === "" || !isValidEmail(email)) {
       loginError.textContent = "Please enter a valid email address.";
@@ -50,25 +47,22 @@
     if (!valid) return;
 
     try {
-      // Example: Save token after a successful login
-      fetch("/login", {
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // Save the token in localStorage
-            localStorage.setItem("token", data.token);
-            window.location.href = "/dashboard"; // Redirect to dashboard
-          } else {
-            alert("Invalid credentials");
-          }
-        })
-        .catch((error) => console.error("Error:", error));
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "/dashboard";
+      } else {
+        loginError.textContent = "The email or password is incorrect";
+      }
     } catch (error) {
       console.error("Error logging in:", error);
       loginError.textContent = "An error occurred. Please try again later.";
