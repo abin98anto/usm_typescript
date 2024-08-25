@@ -5,6 +5,7 @@ import { Pool } from "pg";
 import cloudinary from "cloudinary";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import nocache from "nocache";
 
 cloudinary.v2.config({
   cloud_name: "dqjjysikb",
@@ -23,6 +24,7 @@ import UserRoute from "./routes/user_routes";
 
 const app = express();
 
+app.use(nocache());
 app.use(cookieParser());
 app.use(express.json());
 

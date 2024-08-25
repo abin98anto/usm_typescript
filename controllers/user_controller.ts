@@ -16,113 +16,29 @@ const pool = new Pool({
 
 // Render sign up page / landing page.
 function render_signup(req: Request, res: Response) {
-  return res.render("sign_up");
+  try {
+    return res.render("sign_up");
+  } catch (error) {
+    console.log("Error loading the signup page", error);
+  }
 }
 
 // Render login page.
 function render_user_login(req: Request, res: Response) {
-  return res.render("user_login");
+  try {
+    // res.setHeader(
+    //   "Cache-Control",
+    //   "no-store, no-cache, must-revalidate, proxy-revalidate"
+    // );
+    // res.setHeader("Pragma", "no-cache");
+    // res.setHeader("Expires", "0");
+    return res.render("user_login");
+  } catch (error) {
+    console.log("Error rendering login page", error);
+  }
 }
 
 // Render user dashboard page.
-// async function render_user_dashboard(req: Request, res: Response) {
-//   // const userId = req.session.user_id;
-
-//   // if (!userId) {
-//   //   return res.redirect("/login"); // Redirect to login if no user is logged in
-//   // }
-
-//   try {
-//     // Fetch user data from the database
-//     // const user = await User.findByPk(userId);
-
-//     // if (!user) {
-//     //   return res.status(404).send("User not found.");
-//     // }
-
-//     // // Exclude the password field
-//     // const { password, ...userWithoutPassword } = user.toJSON();
-
-//     // Render the dashboard view with user data
-//     return res.render("user_dashboard");
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     return res.status(500).send("Internal server error");
-//   }
-// }
-
-// async function render_user_dashboard(req: Request, res: Response) {
-//   const authHeader = req.headers.authorization;
-
-//   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//     return res.redirect("/login");
-//   }
-
-//   const token = authHeader.split(" ")[1];
-
-//   try {
-//     // Verify the JWT token
-//     const decoded = jwt.verify(token, JWT_SECRET) as { user_id: number };
-//     const userId = decoded.user_id;
-
-//     // Fetch user data from the database
-//     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
-//       userId,
-//     ]);
-
-//     if (result.rowCount === 0) {
-//       return res.status(404).send("User not found.");
-//     }
-
-//     const user = result.rows[0];
-
-//     // Exclude the password field
-//     const { password, ...userWithoutPassword } = user;
-
-//     // Render the dashboard view with user data
-//     return res.render("user_dashboard", { user: userWithoutPassword });
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     return res.status(500).send("Internal server error");
-//   }
-// }
-
-// async function render_user_dashboard(req: Request, res: Response) {
-//   // const authHeader = req.headers.authorization;
-//   // console.log(authHeader);
-//   // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//   //   return res.redirect("/login");
-//   // }
-
-//   const token = localStorage.getItem("token");
-//   console.log(token);
-//   if (!token) {
-//     res.redirect("/login");
-//     return;
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, JWT_SECRET) as { user_id: number };
-//     const userId = decoded.user_id;
-
-//     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
-//       userId,
-//     ]);
-
-//     if (result.rowCount === 0) {
-//       return res.status(404).send("User not found.");
-//     }
-
-//     const user = result.rows[0];
-//     const { password, ...userWithoutPassword } = user;
-
-//     return res.render("user_dashboard", { user: userWithoutPassword });
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     return res.status(500).send("Internal server error");
-//   }
-// }
-
 async function render_user_dashboard(req: Request, res: Response) {
   const token = req.cookies.token;
 
@@ -196,73 +112,6 @@ async function create_user(req: Request, res: Response) {
 }
 
 // Login Funtionality.
-// async function verify_login(req: Request, res: Response) {
-//   const { email, password } = req.body;
-
-//   try {
-//     const hashPassword = crypto
-//       .createHash("sha256")
-//       .update(password)
-//       .digest("hex");
-
-//     const result = await pool.query(
-//       "SELECT * FROM users WHERE email = $1 AND password = $2",
-//       [email, hashPassword]
-//     );
-//     const exists = result.rowCount !== null && result.rowCount > 0;
-//     if (exists) {
-//       req.session.user_id = result.rows[0].id;
-//       res.json({ success: true });
-//     } else {
-//       res.status(401).json({ success: false });
-//     }
-//   } catch (error) {
-//     console.error("Error logging in:", error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// }
-
-// async function verify_login(req: Request, res: Response) {
-//   const { email, password } = req.body;
-
-//   try {
-//     const hashPassword = crypto
-//       .createHash("sha256")
-//       .update(password)
-//       .digest("hex");
-//     console.log(1);
-//     const result = await pool.query(
-//       "SELECT * FROM users WHERE email = $1 AND password = $2",
-//       [email, hashPassword]
-//     );
-//     console.log(2);
-
-//     const exists = result.rowCount !== null && result.rowCount > 0;
-
-//     console.log(3);
-
-//     if (exists) {
-//       const user = result.rows[0];
-//       console.log(4);
-
-//       // Generate JWT Token
-//       const token = jwt.sign(
-//         { user_id: user.id, isAdmin: user.isAdmin },
-//         JWT_SECRET,
-//         { expiresIn: "1h" } // Token expires in 1 hour
-//       );
-//       console.log(5);
-
-//       res.json({ success: true, token });
-//     } else {
-//       res.status(401).json({ success: false, message: "Invalid credentials" });
-//     }
-//   } catch (error) {
-//     console.error("Error logging in:", error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// }
-
 async function verify_login(req: Request, res: Response) {
   const { email, password } = req.body;
 
@@ -306,6 +155,7 @@ async function verify_login(req: Request, res: Response) {
   }
 }
 
+// Logout Functionality.
 function user_logout(req: Request, res: Response) {
   res.clearCookie("token");
   res.redirect("/login");

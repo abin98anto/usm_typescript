@@ -1,11 +1,20 @@
 import { Router } from "express";
 import UserController from "../controllers/user_controller";
+import AuthMiddleware from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/", UserController.render_signup);
-router.get("/login", UserController.render_user_login);
-router.get("/dashboard", UserController.render_user_dashboard);
+router.get("/", AuthMiddleware.is_loggedout, UserController.render_signup);
+router.get(
+  "/login",
+  AuthMiddleware.is_loggedout,
+  UserController.render_user_login
+);
+router.get(
+  "/dashboard",
+  AuthMiddleware.is_loggedin,
+  UserController.render_user_dashboard
+);
 router.post("/check-email", UserController.check_email);
 router.post("/", UserController.create_user);
 router.post("/login", UserController.verify_login);
