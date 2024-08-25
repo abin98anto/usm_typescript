@@ -23,7 +23,6 @@
 
   logoutButton.addEventListener("click", async () => {
     try {
-      // Show SweetAlert2 confirmation dialog
       const result = await Swal.fire({
         title: "Are you sure?",
         text: "You will be logged out of your account.",
@@ -35,14 +34,11 @@
         cancelButtonText: "Cancel",
       });
 
-      // Check if the user confirmed the action
       if (result.isConfirmed) {
-        // Proceed with logout
         await fetch("/logout", {
           method: "POST",
         });
 
-        // Redirect to login page
         window.location.href = "/login";
       }
     } catch (error) {
