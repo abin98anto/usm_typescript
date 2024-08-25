@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import User from "../models/user_model";
 import { Pool } from "pg";
 
 const JWT_SECRET = "secret-key";
+
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
@@ -55,7 +55,7 @@ async function verify_admin_login(req: Request, res: Response) {
         { expiresIn: "1h" }
       );
 
-      res.cookie("admin-token", token, {
+      res.cookie("admin_token", token, {
         httpOnly: true,
         secure: true,
         maxAge: 3600000,
@@ -74,7 +74,7 @@ async function verify_admin_login(req: Request, res: Response) {
 // Admin Logout functionality.
 function admin_logout(req: Request, res: Response) {
   try {
-    res.clearCookie("admin-token");
+    res.clearCookie("admin_token");
     res.redirect("/admin/");
   } catch (error) {
     return res.status(500).send(`Error logging out user: ${error}`);
