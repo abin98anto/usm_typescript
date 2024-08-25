@@ -71,8 +71,19 @@ async function verify_admin_login(req: Request, res: Response) {
   }
 }
 
+// Admin Logout functionality.
+function admin_logout(req: Request, res: Response) {
+  try {
+    res.clearCookie("admin-token");
+    res.redirect("/admin/");
+  } catch (error) {
+    return res.status(500).send(`Error logging out user: ${error}`);
+  }
+}
+
 export default {
   render_admin_login,
   render_admin_dashboard,
   verify_admin_login,
+  admin_logout,
 };
