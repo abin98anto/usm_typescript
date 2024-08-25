@@ -1,18 +1,26 @@
 <%- include('../partials/header') %>
-<div style="background-color: yellow">
-  <div class="header"><h1>ADmin dashboard</h1></div>
+<div style="background-color: grey">
+  <div class="header"><h1>Admin Dashboard</h1></div>
   <div class="table">
     <table>
       <th>ID</th>
+      <th>Image</th>
       <th>Name</th>
       <th>Email</th>
-      <th>Admin Status</th>
+      <th>Status</th>
+      <th>Action</th>
+      <% users.forEach((user) => { %>
       <tr>
-        <td>1</td>
-        <td>Abin Anto</td>
-        <td>abin98anto@gmail.com</td>
-        <td>not an admin</td>
+        <td><%= user.id %></td>
+        <td>
+          <img src="<%= user.imageurl %>" style="height: 50px; width: 100px" />
+        </td>
+        <td><%= user.username %></td>
+        <td><%= user.email %></td>
+        <td><% if (user.isadmin) {%> Admin <% } else { %> Not Admin <% } %></td>
+        <td><button class="editBtn" data-id="<%= user.id %>">Edit</button></td>
       </tr>
+      <% }) %>
     </table>
   </div>
   <div><button id="logoutBtn">Logout</button></div>
@@ -27,6 +35,7 @@
 
 <script>
   const logoutButton = document.getElementById("logoutBtn");
+  const editButtons = document.querySelectorAll(".editBtn");
 
   logoutButton.addEventListener("click", async () => {
     try {
@@ -51,5 +60,124 @@
     } catch (error) {
       console.error("Error logging out:", error);
     }
+  });
+
+  let default_image;
+  editButtons.forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      const userId = event.target.getAttribute("data-id");
+
+      try {
+        const response = await fetch(`/admin/user?id=${userId}`);
+
+        if (!response.ok) {
+          throw new Error(
+            `Network response was not ok: ${response.statusText}`
+          );
+        }
+
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          const userData = await response.json();
+          const { username, email, isadmin, imageurl } = userData;
+
+          const { value: formValues } = await Swal.fire({
+            title: "Edit User Details",
+            html: `
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <img id="image-preview" src="${imageurl}" style="height: 100px; width: 200px; margin-bottom: 10px;" />
+              <input id="swal-input1" class="swal2-input" value="${username}" placeholder="Username">
+              <input id="swal-input2" class="swal2-input" value="${email}" placeholder="Email">
+              <select id="swal-input3" class="swal2-input">
+                <option value="true" ${isadmin ? "selected" : ""}>True</option>
+                <option value="false" ${
+                  !isadmin ? "selected" : ""
+                }>False</option>
+              </select>
+              <input id="swal-input4" class="swal2-input" type="file" placeholder="Upload Image">
+            </div>
+          `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: "Update",
+            cancelButtonText: "Cancel",
+            preConfirm: async () => {
+              const newUsername = document
+                .getElementById("swal-input1")
+                .value.trim();
+              const newEmail = document
+                .getElementById("swal-input2")
+                .value.trim();
+              const newIsAdmin =
+                document.getElementById("swal-input3").value === "true";
+              const newImageFile =
+                document.getElementById("swal-input4").files[0];
+
+              if (!newUsername || !newEmail) {
+                Swal.showValidationMessage("Please fill out all fields.");
+                return false;
+              }
+
+              let newImageUrl = imageurl;
+              if (newImageFile) {
+                const formData = new FormData();
+                formData.append("file", newImageFile);
+                formData.append("upload_preset", "gkrbyxgv");
+
+                const uploadResponse = await fetch(
+                  "https://api.cloudinary.com/v1_1/dqjjysikb/image/upload",
+                  {
+                    method: "POST",
+                    body: formData,
+                  }
+                );
+
+                if (!uploadResponse.ok) {
+                  throw new Error("Cloudinary upload failed");
+                }
+
+                const uploadData = await uploadResponse.json();
+                newImageUrl = uploadData.secure_url;
+              }
+              return {
+                username: newUsername,
+                email: newEmail,
+                isadmin: newIsAdmin,
+                imageurl: newImageUrl,
+              };
+            },
+          });
+
+          if (formValues) {
+            console.log(formValues);
+            const updateResponse = await fetch(`/admin/user/${userId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formValues),
+            });
+
+            if (!updateResponse.ok) {
+              throw new Error("Failed to update user");
+            }
+
+            window.location.reload();
+          }
+        } else {
+          const errorText = await response.text();
+          throw new Error(
+            `Unexpected response type: ${contentType}\n${errorText}`
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.message,
+        });
+      }
+    });
   });
 </script>

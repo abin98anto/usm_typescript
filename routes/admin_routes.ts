@@ -19,4 +19,7 @@ admin_router.get(
 
 admin_router.post("/logout", AdminController.admin_logout);
 
+admin_router.get("/user", AdminController.get_user_data);
+admin_router.put("/user/:id", AdminController.update_user);
+
 export default admin_router;
