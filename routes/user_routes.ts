@@ -8,6 +8,7 @@ router.get("/login", UserController.render_user_login);
 router.get("/dashboard", UserController.render_user_dashboard);
 router.post("/check-email", UserController.check_email);
 router.post("/", UserController.create_user);
-router.post("/login", UserController.verify_login); 
+router.post("/login", UserController.verify_login);
+router.post("/logout", UserController.user_logout);
 
 export default router;

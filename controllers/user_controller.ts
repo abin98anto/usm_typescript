@@ -306,6 +306,11 @@ async function verify_login(req: Request, res: Response) {
   }
 }
 
+function user_logout(req: Request, res: Response) {
+  res.clearCookie("token");
+  res.redirect("/login");
+}
+
 export default {
   render_signup,
   render_user_login,
@@ -313,4 +318,5 @@ export default {
   create_user,
   check_email,
   verify_login,
+  user_logout,
 };

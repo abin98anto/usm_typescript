@@ -2,7 +2,51 @@
 <div>
   <div class="header"><h1>Welcome Home, <%= user.username %></h1></div>
   <div class="proPic">
-    <img style="height: 300px; width: 600px" src="<%= user.imageurl %>" alt="" />
+    <img
+      style="height: 300px; width: 600px"
+      src="<%= user.imageurl %>"
+      alt=""
+    />
   </div>
+  <button id="logout-button">Logout</button>
 </div>
 <%- include('../partials/footer') %>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  const logoutButton = document.getElementById("logout-button");
+
+  logoutButton.addEventListener("click", async () => {
+    try {
+      // Show SweetAlert2 confirmation dialog
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will be logged out of your account.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Logout",
+        cancelButtonText: "Cancel",
+      });
+
+      // Check if the user confirmed the action
+      if (result.isConfirmed) {
+        // Proceed with logout
+        await fetch("/logout", {
+          method: "POST",
+        });
+
+        // Redirect to login page
+        window.location.href = "/login";
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  });
+</script>
