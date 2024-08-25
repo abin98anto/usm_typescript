@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
 import { Pool } from "pg";
-import User from "../models/user_model";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = "secret-key";
@@ -19,42 +18,33 @@ function render_signup(req: Request, res: Response) {
   try {
     return res.render("sign_up");
   } catch (error) {
-    console.log("Error loading the signup page", error);
+    return res.status(500).send(`Error rendering signup page : ${error}`);
   }
 }
 
 // Render login page.
 function render_user_login(req: Request, res: Response) {
   try {
-    // res.setHeader(
-    //   "Cache-Control",
-    //   "no-store, no-cache, must-revalidate, proxy-revalidate"
-    // );
-    // res.setHeader("Pragma", "no-cache");
-    // res.setHeader("Expires", "0");
     return res.render("user_login");
   } catch (error) {
-    console.log("Error rendering login page", error);
+    return res.status(500).send(`Error login page : ${error}`);
   }
 }
 
 // Render user dashboard page.
 async function render_user_dashboard(req: Request, res: Response) {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.redirect("/login");
-  }
-
   try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.redirect("/login");
+    }
+
     const decoded = jwt.verify(token, JWT_SECRET) as { user_id: number };
     const userId = decoded.user_id;
-    console.log(decoded);
-    console.log(userId);
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [
       userId,
     ]);
-    // console.log(result);
 
     if (result.rowCount === 0) {
       return res.status(404).send("User not found.");
@@ -62,27 +52,24 @@ async function render_user_dashboard(req: Request, res: Response) {
 
     const user = result.rows[0];
     const { password, ...userWithoutPassword } = user;
-    console.log(user);
-    return res.render("user_dashboard", { user: userWithoutPassword });
+    res.render("user_dashboard", { user: userWithoutPassword });
   } catch (error) {
-    console.error("Error fetching user data:", error);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(`Error fetching user data: ${error}`);
   }
 }
 
 // To check if email exists in our database.
 async function check_email(req: Request, res: Response) {
-  const { email } = req.body;
-
   try {
+    const { email } = req.body;
+
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
     const exists = result.rowCount !== null && result.rowCount > 0;
     res.json({ exists });
   } catch (error) {
-    console.error("Error checking email:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).send(`Error checking if the email exits : ${error}`);
   }
 }
 
@@ -98,7 +85,6 @@ async function create_user(req: Request, res: Response) {
       .update(password)
       .digest("hex");
 
-    // Insert the new user into the database with the image URL from Cloudinary
     await pool.query(
       "INSERT INTO users (username, email, password, isAdmin, imageUrl) VALUES ($1, $2, $3, $4, $5)",
       [username, email, hashPassword, false, profileImage]
@@ -106,16 +92,15 @@ async function create_user(req: Request, res: Response) {
 
     res.status(200).send();
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).send(`Error creating a new user : ${error}`);
   }
 }
 
 // Login Funtionality.
 async function verify_login(req: Request, res: Response) {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
+
     const hashPassword = crypto
       .createHash("sha256")
       .update(password)
@@ -131,18 +116,16 @@ async function verify_login(req: Request, res: Response) {
     if (exists) {
       const user = result.rows[0];
 
-      // Generate JWT Token
       const token = jwt.sign(
         { user_id: user.id, isAdmin: user.isAdmin },
         JWT_SECRET,
         { expiresIn: "1h" }
       );
-      console.log(token);
-      // Set the token in an HTTP-only cookie
+
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true, // Use true in production with HTTPS
-        maxAge: 3600000, // 1 hour
+        secure: true,
+        maxAge: 3600000,
       });
 
       res.json({ success: true });
@@ -150,15 +133,18 @@ async function verify_login(req: Request, res: Response) {
       res.status(401).json({ success: false, message: "Invalid credentials" });
     }
   } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    return res.status(500).send(`Error logging in user : ${error}`);
   }
 }
 
 // Logout Functionality.
 function user_logout(req: Request, res: Response) {
-  res.clearCookie("token");
-  res.redirect("/login");
+  try {
+    res.clearCookie("token");
+    res.redirect("/login");
+  } catch (error) {
+    return res.status(500).send(`Error logging out user: ${error}`);
+  }
 }
 
 export default {
