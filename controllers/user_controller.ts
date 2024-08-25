@@ -137,7 +137,7 @@ async function verify_login(req: Request, res: Response) {
         JWT_SECRET,
         { expiresIn: "1h" }
       );
-
+      console.log(token);
       // Set the token in an HTTP-only cookie
       res.cookie("token", token, {
         httpOnly: true,
