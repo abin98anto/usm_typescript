@@ -3,29 +3,30 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = "secret-key";
 
+// To check if user is logged in before proceeding.
 function is_loggedin(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
 
     if (token) {
       try {
-        // Verify the token
         jwt.verify(token, JWT_SECRET);
-        return next(); // Token is valid, proceed to the requested route
+        return next();
       } catch (error) {
         console.log("Invalid token:", error);
-        return res.redirect("/login"); // Redirect to login if token is invalid
+        return res.redirect("/login");
       }
     }
 
-    // No token present, redirect to login
     res.redirect("/login");
   } catch (error) {
-    console.log("Error in is_loggedin function (auth middleware):", error);
-    res.status(500).send("Internal server error");
+    res
+      .status(500)
+      .send(`Error in is_loggedin function (auth middleware): ${error}`);
   }
 }
 
+// To check if user is logged out before proceeding.
 function is_loggedout(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
@@ -34,11 +35,11 @@ function is_loggedout(req: Request, res: Response, next: NextFunction) {
       res.redirect("/dashboard");
     }
 
-    // No token present, redirect to login
     return next();
   } catch (error) {
-    console.log("Error in is_loggedin function (auth middleware):", error);
-    res.status(500).send("Internal server error");
+    res
+      .status(500)
+      .send(`Error in is_loggedout function (auth middleware): ${error}`);
   }
 }
 
