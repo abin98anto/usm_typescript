@@ -3,6 +3,8 @@ import path from "path";
 import sequelize from "./config/database";
 import { Pool } from "pg";
 import cloudinary from "cloudinary";
+import session from "express-session";
+import cookieParser from "cookie-parser";
 
 cloudinary.v2.config({
   cloud_name: "dqjjysikb",
@@ -21,7 +23,17 @@ import UserRoute from "./routes/user_routes";
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
+
+app.use(
+  session({
+    secret: "secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
 
 app.set("view engine", "ejs");
 app.set("views", [

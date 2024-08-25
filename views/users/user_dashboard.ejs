@@ -1,5 +1,8 @@
 <%- include('../partials/header') %>
 <div>
-  <div class="header"><h1>Welcome Home</h1></div>
+  <div class="header"><h1>Welcome Home, <%= user.username %></h1></div>
+  <div class="proPic">
+    <img style="height: 300px; width: 600px" src="<%= user.imageurl %>" alt="" />
+  </div>
 </div>
 <%- include('../partials/footer') %>
