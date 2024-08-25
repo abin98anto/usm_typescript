@@ -21,5 +21,7 @@ admin_router.post("/logout", AdminController.admin_logout);
 
 admin_router.get("/user", AdminController.get_user_data);
 admin_router.put("/user/:id", AdminController.update_user);
+admin_router.post("/user", AdminController.create_user);
+admin_router.delete("/user/:id", AdminController.delete_user);
 
 export default admin_router;

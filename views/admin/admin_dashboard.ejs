@@ -1,6 +1,10 @@
 <%- include('../partials/header') %>
 <div style="background-color: grey">
   <div class="header"><h1>Admin Dashboard</h1></div>
+  <div>
+    <button id="create-user">Add New User</button
+    ><button id="logoutBtn">Logout</button>
+  </div>
   <div class="table">
     <table>
       <th>ID</th>
@@ -18,12 +22,14 @@
         <td><%= user.username %></td>
         <td><%= user.email %></td>
         <td><% if (user.isadmin) {%> Admin <% } else { %> Not Admin <% } %></td>
-        <td><button class="editBtn" data-id="<%= user.id %>">Edit</button></td>
+        <td>
+          <button class="editBtn" data-id="<%= user.id %>">Edit</button>
+          <button class="deleteBtn" data-id="<%= user.id %>">Delete</button>
+        </td>
       </tr>
       <% }) %>
     </table>
   </div>
-  <div><button id="logoutBtn">Logout</button></div>
 </div>
 <%- include('../partials/footer') %>
 
@@ -36,6 +42,8 @@
 <script>
   const logoutButton = document.getElementById("logoutBtn");
   const editButtons = document.querySelectorAll(".editBtn");
+  const createUserButton = document.getElementById("create-user");
+  const deleteButtons = document.querySelectorAll(".deleteBtn");
 
   logoutButton.addEventListener("click", async () => {
     try {
@@ -62,13 +70,14 @@
     }
   });
 
-  let default_image;
   editButtons.forEach((button) => {
     button.addEventListener("click", async (event) => {
       const userId = event.target.getAttribute("data-id");
 
       try {
-        const response = await fetch(`/admin/user?id=${userId}`);
+        const response = await fetch(`/admin/user?id=${userId}`, {
+          method: "GET",
+        });
 
         if (!response.ok) {
           throw new Error(
@@ -169,6 +178,135 @@
           throw new Error(
             `Unexpected response type: ${contentType}\n${errorText}`
           );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.message,
+        });
+      }
+    });
+  });
+
+  createUserButton.addEventListener("click", async () => {
+    try {
+      const { value: formValues } = await Swal.fire({
+        title: "Add New User",
+        html: `
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <input id="swal-input1" class="swal2-input" placeholder="Username">
+          <input id="swal-input2" class="swal2-input" placeholder="Email">
+          <input id="swal-input3" class="swal2-input" type="password" placeholder="Password">
+          <select id="swal-input4" class="swal2-input">
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+          <input id="swal-input5" class="swal2-input" type="file" placeholder="Upload Image">
+        </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: "Add User",
+        cancelButtonText: "Cancel",
+        preConfirm: async () => {
+          const username = document.getElementById("swal-input1").value.trim();
+          const email = document.getElementById("swal-input2").value.trim();
+          const password = document.getElementById("swal-input3").value.trim();
+          const isAdmin =
+            document.getElementById("swal-input4").value === "true";
+          const imageFile = document.getElementById("swal-input5").files[0];
+
+          if (!username || !email || !password) {
+            Swal.showValidationMessage("Please fill out all fields.");
+            return false;
+          }
+
+          let imageUrl = "";
+          if (imageFile) {
+            const formData = new FormData();
+            formData.append("file", imageFile);
+            formData.append("upload_preset", "gkrbyxgv");
+
+            const uploadResponse = await fetch(
+              "https://api.cloudinary.com/v1_1/dqjjysikb/image/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            if (!uploadResponse.ok) {
+              throw new Error("Cloudinary upload failed");
+            }
+
+            const uploadData = await uploadResponse.json();
+            imageUrl = uploadData.secure_url;
+          }
+
+          return {
+            username,
+            email,
+            password,
+            isadmin: isAdmin,
+            imageurl: imageUrl,
+          };
+        },
+      });
+
+      if (formValues) {
+        const createResponse = await fetch("/admin/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formValues),
+        });
+
+        if (!createResponse.ok) {
+          throw new Error("Failed to add new user");
+        }
+
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.message,
+      });
+    }
+  });
+
+  deleteButtons.forEach((button) => {
+    // Add this block
+    button.addEventListener("click", async (event) => {
+      const userId = event.target.getAttribute("data-id");
+
+      try {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "This user will be deleted permanently.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+        });
+
+        if (result.isConfirmed) {
+          const deleteResponse = await fetch(`/admin/user/${userId}`, {
+            method: "DELETE",
+          });
+
+          if (!deleteResponse.ok) {
+            throw new Error("Failed to delete user");
+          }
+
+          window.location.reload();
         }
       } catch (error) {
         console.error("Error:", error);
