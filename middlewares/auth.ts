@@ -32,10 +32,10 @@ function is_loggedout(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.token;
 
     if (token) {
-      res.redirect("/dashboard");
+      return res.redirect("/dashboard");
     }
 
-    return next();
+    next();
   } catch (error) {
     res
       .status(500)

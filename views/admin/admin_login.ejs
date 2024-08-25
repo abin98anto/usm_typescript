@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+<div style="background-color: yellow">
+  <div class="header"><h1>Admin Login</h1></div>
+  <div class="input_fields">
+    <input id="email" type="text" placeholder="Enter your email" /><br />
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter your password"
+    /><br />
+    <button id="login-button" class="login_button">Login</button><br />
+    <span id="error-message" class="error-message"></span>
+  </div>
+  <div class="new_user"><a href="/">Create New Account</a></div>
+</div>
+<%- include('../partials/footer') %>
+
+<script>
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const loginButton = document.getElementById("login-button");
+  const loginError = document.getElementById("error-message");
+
+  function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  loginButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    let valid = true;
+    loginError.textContent = "";
+
+    if (email === "" || !isValidEmail(email)) {
+      loginError.textContent = "Please enter a valid email address.";
+      valid = false;
+    }
+
+    if (password === "") {
+      loginError.textContent = "Password is required.";
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    try {
+      const response = await fetch("/admin/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        window.location.href = "/admin/dashboard";
+      } else {
+        loginError.textContent = data.message;
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      loginError.textContent = "An error occurred. Please try again later.";
+    }
+  });
+</script>

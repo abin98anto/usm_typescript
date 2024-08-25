@@ -6,13 +6,13 @@ import cookieParser from "cookie-parser";
 import nocache from "nocache";
 
 import UserRoute from "./routes/user_routes";
+import AdminRoute from "./routes/admin_routes";
 
 cloudinary.v2.config({
   cloud_name: "dqjjysikb",
   api_key: "693894612636766",
   api_secret: "yJTpRqj1xwIC1KrJ6c1twQdq2qU",
 });
-
 
 const app = express();
 
@@ -28,6 +28,7 @@ app.set("views", [
 ]);
 
 app.use("/", UserRoute);
+app.use("/admin", AdminRoute);
 
 sequelize
   .sync({ force: false })
