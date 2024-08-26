@@ -75,9 +75,9 @@ async function check_email(req: Request, res: Response) {
 
 // Create New User.
 async function create_user(req: Request, res: Response) {
-  const { name, email, password, profileImage } = req.body;
-
   try {
+    const { name, email, password, profileImage } = req.body;
+
     const username = name;
 
     const hashPassword = crypto

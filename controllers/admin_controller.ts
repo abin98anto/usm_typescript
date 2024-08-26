@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { Pool } from "pg";
-import cloudinary from "cloudinary";
 
 const JWT_SECRET = "secret-key";
 
@@ -152,14 +151,11 @@ async function delete_user(req: Request, res: Response) {
   const userId = parseInt(req.params.id);
 
   try {
-    // Use the pool to get a client
     const client = await pool.connect();
 
     try {
-      // Start a transaction
       await client.query("BEGIN");
 
-      // Check if the user exists
       const result = await client.query("SELECT * FROM users WHERE id = $1", [
         userId,
       ]);
@@ -169,10 +165,8 @@ async function delete_user(req: Request, res: Response) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Delete the user
       await client.query("DELETE FROM users WHERE id = $1", [userId]);
 
-      // Commit the transaction
       await client.query("COMMIT");
 
       return res.status(200).json({ message: "User deleted successfully" });
