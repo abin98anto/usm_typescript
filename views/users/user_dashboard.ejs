@@ -1,14 +1,15 @@
 <%- include('../partials/header') %>
-<div>
-  <div class="header"><h1>Welcome Home, <%= user.username %></h1></div>
-  <div class="proPic">
-    <img
-      style="height: 300px; width: 600px"
-      src="<%= user.imageurl %>"
-      alt=""
-    />
+<div class="container">
+  <div class="welcome-container">
+    <div class="header">
+      <h1>Welcome Home, <%= user.username %></h1>
+    </div>
+    <p><%= user.email %></p>
+    <div class="proPic">
+      <img src="<%= user.imageurl %>" alt="Profile Picture" />
+    </div>
+    <button id="logout-button" class="btn btn-logout">Logout</button>
   </div>
-  <button id="logout-button">Logout</button>
 </div>
 <%- include('../partials/footer') %>
 
@@ -17,6 +18,97 @@
   href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
 />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 1000px;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  .welcome-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    animation: slideUp 1.5s ease-in-out;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .proPic img {
+    height: 300px;
+    width: 100%;
+    border-radius: 15px;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+
+  .proPic img:hover {
+    transform: scale(1.05);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  .btn-logout {
+    background-color: #fda085;
+    color: #fff;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+</style>
 
 <script>
   const logoutButton = document.getElementById("logout-button");

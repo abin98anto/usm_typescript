@@ -23,17 +23,46 @@ function render_admin_login(req: Request, res: Response) {
 }
 
 // Render admin dashboard.
+// async function render_admin_dashboard(req: Request, res: Response) {
+//   try {
+//     const result = await pool.query(
+//       "SELECT id, username, email, isAdmin, imageUrl, createdOn FROM users"
+//     );
+
+//     const users = result.rows;
+
+//     res.render("admin_dashboard", { users });
+//   } catch (error) {
+//     res.status(500).send(`error rendering admin dashboard : ${error}`);
+//   }
+// }
+
+// Render admin dashboard with pagination.
 async function render_admin_dashboard(req: Request, res: Response) {
   try {
-    const result = await pool.query(
-      "SELECT id, username, email, isAdmin, imageUrl, createdOn FROM users"
-    );
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const offset = (page - 1) * limit;
 
+    // Query for users with pagination
+    const result = await pool.query(
+      "SELECT id, username, email, isAdmin, imageUrl, createdOn FROM users LIMIT $1 OFFSET $2",
+      [limit, offset]
+    );
     const users = result.rows;
 
-    res.render("admin_dashboard", { users });
+    // Query for total number of users
+    const countResult = await pool.query("SELECT COUNT(*) AS total FROM users");
+    const total = parseInt(countResult.rows[0].total);
+
+    res.render("admin_dashboard", {
+      users,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      limit,
+    });
   } catch (error) {
-    res.status(500).send(`error rendering admin dashboard : ${error}`);
+    res.status(500).send(`Error rendering admin dashboard: ${error}`);
   }
 }
 

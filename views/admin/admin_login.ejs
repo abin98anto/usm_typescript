@@ -1,17 +1,26 @@
 <%- include('../partials/header') %>
-<div style="background-color: yellow">
-  <div class="header"><h1>Admin Login</h1></div>
-  <div class="input_fields">
-    <input id="email" type="text" placeholder="Enter your email" /><br />
-    <input
-      id="password"
-      type="password"
-      placeholder="Enter your password"
-    /><br />
-    <button id="login-button" class="login_button">Login</button><br />
-    <span id="error-message" class="error-message"></span>
+<div class="container">
+  <div class="login-container">
+    <div class="header">
+      <h1>Admin Login</h1>
+    </div>
+    <div class="input-fields">
+      <div class="input-group">
+        <input id="email" type="text" placeholder="Enter your email" />
+        <span id="error-email" class="error-message"></span>
+      </div>
+      <div class="input-group">
+        <input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+        />
+        <span id="error-password" class="error-message"></span>
+      </div>
+      <button id="login-button" class="btn btn-login">Login</button>
+      <span id="error-message" class="error-message"></span>
+    </div>
   </div>
-  <div class="new_user"><a href="/">Create New Account</a></div>
 </div>
 <%- include('../partials/footer') %>
 
@@ -19,6 +28,8 @@
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const loginButton = document.getElementById("login-button");
+  const emailError = document.getElementById("error-email");
+  const passwordError = document.getElementById("error-password");
   const loginError = document.getElementById("error-message");
 
   function isValidEmail(email) {
@@ -32,15 +43,18 @@
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     let valid = true;
+
+    emailError.textContent = "";
+    passwordError.textContent = "";
     loginError.textContent = "";
 
     if (email === "" || !isValidEmail(email)) {
-      loginError.textContent = "Please enter a valid email address.";
+      emailError.textContent = "Please enter a valid email address.";
       valid = false;
     }
 
     if (password === "") {
-      loginError.textContent = "Password is required.";
+      passwordError.textContent = "Password is required.";
       valid = false;
     }
 
@@ -68,3 +82,130 @@
     }
   });
 </script>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(120deg, #89b6e1 0%, #3f67ad 100%);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 1000px;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  .login-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: slideUp 1.5s ease-in-out;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .input-fields {
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+    position: relative;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  input:focus {
+    border-color: #6a11cb;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  .btn-login {
+    background-color: #2575fc;
+    color: #fff;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .error-message {
+    color: #d9534f;
+    font-size: 0.875rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+
+  .new-user {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 1rem;
+  }
+
+  .new-user a {
+    color: #2575fc;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .new-user a:hover {
+    color: #6a11cb;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+</style>
