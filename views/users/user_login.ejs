@@ -1,6 +1,11 @@
 <%- include('../partials/header') %>
 <div class="container">
   <div class="form-container">
+    <img
+      src="/profile_image.png"
+      style="width: 50px; height: 50px"
+      alt="profile_image"
+    />
     <h1 class="form-title">Login</h1>
 
     <div class="input-fields">
@@ -17,10 +22,16 @@
         />
         <span id="password-error" class="error-message"></span>
       </div>
-
-      <button id="login-button" class="btn btn-login">Login</button>
-      <span id="error-message" class="error-message"></span>
     </div>
+
+    <div>
+      <span style="color: red;"
+        id="error-message"
+      ></span>
+    </div>
+    <button id="login-button" class="btn btn-login" style="margin-top: 20px">
+      Login
+    </button>
 
     <div class="new-user">
       <p>New user? <a href="/">Create New Account</a></p>
@@ -34,7 +45,7 @@
 
   body {
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    background: linear-gradient(120deg, #1d1c19 0%, #534642 100%);
     height: 100vh;
     margin: 0;
     display: flex;
@@ -48,7 +59,7 @@
     align-items: center;
     height: 100%;
     width: 1000px;
-    animation: fadeIn 2s ease-in-out;
+    animation: fadeIn 1s ease-in-out;
   }
 
   .form-container {
@@ -57,6 +68,7 @@
     border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
+    
     max-width: 400px;
     text-align: center;
     position: relative;
@@ -70,7 +82,10 @@
   }
 
   .input-fields {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+    text-align: left;
+    position: relative;
   }
 
   .input-group {
@@ -85,7 +100,7 @@
     padding: 0.75rem;
     margin-top: 0.25rem;
     border: 1px solid #ddd;
-    border-radius: 30px;
+    border-radius: 10px;
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s;
@@ -106,7 +121,7 @@
   }
 
   .btn-login {
-    background-color: #f6d365;
+    background-color: #27210f;
     color: #fff;
   }
 
@@ -115,8 +130,9 @@
   }
 
   .error-message {
+    margin: 10px;
     color: #d9534f;
-    font-size: 0.875rem;
+    font-size: 0.675rem;
     position: absolute;
     top: 100%;
     left: 0;
@@ -175,18 +191,22 @@
     const password = passwordInput.value.trim();
     let valid = true;
 
-    document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+    document
+      .querySelectorAll(".error-message")
+      .forEach((msg) => (msg.textContent = ""));
     emailInput.classList.remove("error");
     passwordInput.classList.remove("error");
 
     if (!email || !isValidEmail(email)) {
-      document.getElementById("email-error").textContent = "Please enter a valid email address.";
+      document.getElementById("email-error").textContent =
+        "*Please enter a valid email address.";
       emailInput.classList.add("error");
       valid = false;
     }
 
     if (!password) {
-      document.getElementById("password-error").textContent = "Password is required.";
+      document.getElementById("password-error").textContent =
+        "*Password is required.";
       passwordInput.classList.add("error");
       valid = false;
     }

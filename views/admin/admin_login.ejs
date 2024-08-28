@@ -2,6 +2,11 @@
 <div class="container">
   <div class="login-container">
     <div class="header">
+      <img
+      src="/administrator.png"
+      style="width: 50px; height: 50px"
+      alt="profile_image"
+    />
       <h1>Admin Login</h1>
     </div>
     <div class="input-fields">
@@ -18,7 +23,7 @@
         <span id="error-password" class="error-message"></span>
       </div>
       <button id="login-button" class="btn btn-login">Login</button>
-      <span id="error-message" class="error-message"></span>
+      <span id="error-message" class="error-message" style="margin-top: 20px;"></span>
     </div>
   </div>
 </div>
@@ -111,8 +116,10 @@
     border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
+    
     max-width: 400px;
     text-align: center;
+    position: relative;
     animation: slideUp 1.5s ease-in-out;
   }
 
@@ -123,7 +130,10 @@
   }
 
   .input-fields {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+    text-align: left;
+    position: relative;
   }
 
   .input-group {
@@ -168,11 +178,13 @@
   }
 
   .error-message {
+    display: flex;
+    justify-content: center;
     color: #d9534f;
     font-size: 0.875rem;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    /* position: absolute; */
+    /* top: 100%; */
+    /* left: 0; */
   }
 
   .new-user {

@@ -27,6 +27,8 @@ app.set("views", [
   path.join(__dirname, "views", "partials"),
 ]);
 
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use("/", UserRoute);
 app.use("/admin", AdminRoute);
 
@@ -35,3 +37,4 @@ sequelize
   .then(() => console.log("database and tables created!"));
 
 app.listen(3000, () => console.log("server started : http://localhost:3000/"));
+
