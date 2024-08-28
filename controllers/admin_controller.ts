@@ -41,7 +41,7 @@ function render_admin_login(req: Request, res: Response) {
 async function render_admin_dashboard(req: Request, res: Response) {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 6;
     const offset = (page - 1) * limit;
 
     // Query for users with pagination
