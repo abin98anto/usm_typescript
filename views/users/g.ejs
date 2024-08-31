@@ -22,11 +22,10 @@
         <span id="email-error" class="error-message"></span>
       </div>
 
-      <div class="form-control password-field">
+      <div class="form-control">
         <input id="password" type="password" required />
         <label for="password"><span>Enter your password</span></label>
         <span id="password-error" class="error-message"></span>
-        <button type="button" id="togglePassword" class="view-btn">👁️</button>
       </div>
 
       <div class="form-control">
@@ -53,13 +52,12 @@
 
 <%- include('../partials/footer') %>
 
-<style>
+<!-- <style>
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
   body {
     font-family: "Poppins", sans-serif;
-    /* background: linear-gradient(120deg, #1d1c19 0%, #534642 100%); */
-    background: rgb(185, 185, 185);
+    background: linear-gradient(120deg, #1d1c19 0%, #534642 100%);
     height: 100vh;
     margin: 0;
     display: flex;
@@ -78,9 +76,8 @@
 
   .form-container {
     background: #fff;
-    border: 2px solid #27210f;
     padding: 2rem;
-    /* border-radius: 15px; */
+    border-radius: 15px;
     box-shadow: 0 15px 30px rgba(196, 143, 143, 0.1);
     width: 150%;
     max-width: 600px;
@@ -99,72 +96,28 @@
     margin-bottom: 1.5rem;
   }
 
-  .form-control {
-    position: relative;
-    margin: 20px 0 40px;
-    width: 100%;
-  }
-
-  .form-control input {
-    background-color: transparent;
-    border: 0;
-    border-bottom: 2px #333 solid;
-    display: block;
-    width: 100%;
-    padding: 15px 0;
-    font-size: 18px;
-    color: #333;
-  }
-
-  .form-control input:focus,
-  .form-control input:valid {
-    outline: 0;
-    border-bottom-color: lightblue;
-  }
-
-  .form-control label {
-    position: absolute;
-    top: 15px;
-    left: 0;
-    pointer-events: none;
-  }
-
-  .form-control label span {
-    display: inline-block;
-    font-size: 18px;
-    min-width: 5px;
-    color: #333;
-    transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .form-control input:focus+label span,
-  .form-control input:valid+label span {
-    color: rgb(0, 0, 0);
-    transform: translateY(-30px);
-  }
-
-  .form-control.password-field {
+  .input-group {
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+    text-align: left;
     position: relative;
   }
 
-  .view-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    visibility: hidden;
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
   }
 
-  .form-control.password-field:hover .view-btn {
-    visibility: visible;
-  }
-
-  .form-control.password-field input:valid:hover+.view-btn {
-    visibility: visible;
+  input:focus {
+    border-color: #fda085;
   }
 
   .btn {
@@ -172,9 +125,9 @@
     padding: 0.75rem;
     font-size: 1rem;
     border: none;
+    border-radius: 30px;
     cursor: pointer;
-    /* border-radius: 30px; */
-    /* transition: background-color 0.3s, transform 0.3s; */
+    transition: background-color 0.3s, transform 0.3s;
   }
 
   .btn-upload {
@@ -184,12 +137,25 @@
     margin-bottom: 1rem;
   }
 
+  .btn-register {
+    background-color: #27210f;
+    color: #fff;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .upload-btn {
+    display: flex;
+    justify-content: center;
+  }
   .error-message {
     color: #d9534f;
-    font-size: 0.875rem;
+    font-size: 0.675rem;
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 50;
   }
 
   .existing-user {
@@ -199,7 +165,7 @@
   }
 
   .existing-user a {
-    color: black;
+    color: #fda085;
     text-decoration: none;
     transition: color 0.3s;
   }
@@ -207,39 +173,6 @@
   .existing-user a:hover {
     color: #000000;
   }
-
-  /* For the Register button */
-.btn-register {
-  background-color: #f5f5f5;
-  color: #27210f;
-  border: 2px solid #27210f;
-  font-weight: bold;
-  transition: 0.3s ease-in-out;
-}
-
-.btn-register:hover {
-  background-color: #27210f;
-  color: #f5f5f5;
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 20px rgba(39, 33, 15, 0.3);
-}
-
-/* For the Upload Profile Image button */
-.btn-upload {
-  background-color: #f5f5f5;
-  color: #27210f;
-  border: 2px solid #27210f;
-  font-weight: bold;
-  transition: 0.3s ease-in-out;
-}
-
-.btn-upload:hover {
-  background-color: #27210f;
-  color: #f5f5f5;
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 20px rgba(39, 33, 15, 0.3);
-}
-
 
   @keyframes fadeIn {
     from {
@@ -258,6 +191,169 @@
       transform: translateY(0);
     }
   }
+</style> -->
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, #1d1c19 0%, #534642 100%);
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 1000px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.form-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(196, 143, 143, 0.1);
+  width: 150%;
+  max-width: 600px;
+  text-align: center;
+  position: relative;
+  animation: slideUp 1.5s ease-in-out;
+}
+
+.form-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.input-fields {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  position: relative;
+  margin: 20px 0 40px;
+  width: 100%;
+}
+
+.form-control input {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px #333 solid;
+  display: block;
+  width: 100%;
+  padding: 15px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.form-control input:focus,
+.form-control input:valid {
+  outline: 0;
+  border-bottom-color: lightblue;
+}
+
+.form-control label {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  pointer-events: none;
+}
+
+.form-control label span {
+  display: inline-block;
+  font-size: 18px;
+  min-width: 5px;
+  color: #333;
+  transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-control input:focus+label span,
+.form-control input:valid+label span {
+  color: rgb(0, 0, 0);
+  transform: translateY(-30px);
+}
+
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-upload {
+  width: 50%;
+  background-color: #27210f;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.btn-register {
+  background-color: #27210f;
+  color: #fff;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.upload-btn {
+  display: flex;
+  justify-content: center;
+}
+
+.error-message {
+  color: #d9534f;
+  font-size: 0.875rem;
+  position: absolute;
+  top: 100%;
+  left: 50;
+}
+
+.existing-user {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.existing-user a {
+  color: #fda085;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.existing-user a:hover {
+  color: #000000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 </style>
 
 <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
@@ -266,13 +362,14 @@
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirm-password");
-  const togglePassword = document.getElementById("togglePassword");
   const uploadImageButton = document.getElementById("upload-image-button");
 
   const nameError = document.getElementById("name-error");
   const emailError = document.getElementById("email-error");
   const passwordError = document.getElementById("password-error");
-  const confirmPasswordError = document.getElementById("confirm-password-error");
+  const confirmPasswordError = document.getElementById(
+    "confirm-password-error"
+  );
   const imageError = document.getElementById("image-error");
 
   let uploadedImageUrl = "";
@@ -327,47 +424,57 @@
     }
 
     try {
-      const response = await fetch(`/check-email?email=${encodeURIComponent(email)}`,{
-        method:'POST'
+      const response = await fetch("/check-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
       });
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.exists) {
-        emailError.textContent = "*This email is already registered.";
+      if (result.exists) {
+        emailError.textContent = "*Email is already taken.";
+      } else {
+        emailError.textContent = "";
       }
     } catch (error) {
-      emailError.textContent = "Error checking email. Please try again.";
-      console.error("Error:", error);
+      console.error("Error checking email:", error);
+      emailError.textContent = "Error checking email. Please try again later.";
     }
   });
 
   passwordInput.addEventListener("blur", () => {
-    const password = passwordInput.value.trim();
+    const password = passwordInput.value;
+    passwordError.textContent = "";
+
     if (password === "") {
       passwordError.textContent = "*Password is required.";
-    } else if (password.length < 6) {
-      passwordError.textContent = "*Password must be at least 8 characters long.";
-    } else {
-      passwordError.textContent = "";
+      return;
+    }
+
+    if (password.length < 6) {
+      passwordError.textContent =
+        "*Password must be at least 6 characters long.";
+      return;
     }
   });
 
   confirmPasswordInput.addEventListener("blur", () => {
-    const confirmPassword = confirmPasswordInput.value.trim();
-    const password = passwordInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    confirmPasswordError.textContent = "";
+
     if (confirmPassword === "") {
       confirmPasswordError.textContent = "*Please confirm your password.";
-    } else if (confirmPassword !== password) {
+      return;
+    }
+
+    if (password !== confirmPassword) {
       confirmPasswordError.textContent = "*Passwords do not match.";
     } else {
       confirmPasswordError.textContent = "";
     }
-  });
-
-  togglePassword.addEventListener("click", () => {
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-    togglePassword.textContent = type === "password" ? "👁️" : "👁️‍🗨️";
   });
 
   document

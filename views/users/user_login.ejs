@@ -9,32 +9,30 @@
     <h1 class="form-title">Login</h1>
 
     <div class="input-fields">
-      <div class="input-group">
-        <input id="email" type="text" placeholder="Enter your email" />
+      <div class="form-control">
+        <input id="email" type="text" required />
+        <label for="email"><span>Enter your email</span></label>
         <span id="email-error" class="error-message"></span>
       </div>
 
-      <div class="input-group">
-        <input
-          id="password"
-          type="password"
-          placeholder="Enter your password"
-        />
+      <div class="form-control password-field">
+        <input id="password" type="password" required />
+        <label for="password"><span>Enter your password</span></label>
         <span id="password-error" class="error-message"></span>
+        <button type="button" id="togglePassword" class="view-btn">👁️</button>
       </div>
     </div>
 
     <div>
-      <span style="color: red;"
-        id="error-message"
-      ></span>
+      <span id="error-message" class="error-message"></span>
     </div>
+
     <button id="login-button" class="btn btn-login" style="margin-top: 20px">
       Login
     </button>
 
     <div class="new-user">
-      <p>New user? <a href="/">Create New Account</a></p>
+      <p>New user? <a href="/" class="new-user">Create New Account</a></p>
     </div>
   </div>
 </div>
@@ -45,7 +43,7 @@
 
   body {
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(120deg, #1d1c19 0%, #534642 100%);
+    background: rgb(211, 211, 211);
     height: 100vh;
     margin: 0;
     display: flex;
@@ -64,11 +62,10 @@
 
   .form-container {
     background: #fff;
+    border: 2px solid #27210f;
     padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 30px rgba(196, 143, 143, 0.1);
     width: 100%;
-    
     max-width: 400px;
     text-align: center;
     position: relative;
@@ -82,32 +79,77 @@
   }
 
   .input-fields {
-    margin-bottom: 2rem;
-    margin-right: 2rem;
-    text-align: left;
-    position: relative;
+    margin-bottom: 1.5rem;
   }
 
-  .input-group {
-    margin-bottom: 2rem;
-    text-align: left;
+  .form-control {
     position: relative;
-  }
-
-  input[type="text"],
-  input[type="password"] {
+    margin: 20px 0 40px;
     width: 100%;
-    padding: 0.75rem;
-    margin-top: 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s;
   }
 
-  input:focus {
-    border-color: #fda085;
+  .form-control input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px #333 solid;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .form-control input:focus,
+  .form-control input:valid {
+    outline: 0;
+    border-bottom-color: lightblue;
+  }
+
+  .form-control label {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    pointer-events: none;
+  }
+
+  .form-control label span {
+    display: inline-block;
+    font-size: 18px;
+    min-width: 5px;
+    color: #333;
+    transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .form-control input:focus+label span,
+  .form-control input:valid+label span {
+    color: rgb(0, 0, 0);
+    transform: translateY(-30px);
+  }
+
+  .form-control.password-field {
+    position: relative;
+  }
+
+  .view-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    visibility: hidden;
+    transition: color 0.3s;
+  }
+
+  .view-btn:hover {
+    color: #000;
+  }
+
+  .form-control.password-field input:valid~.view-btn {
+    visibility: visible;
   }
 
   .btn {
@@ -115,24 +157,34 @@
     padding: 0.75rem;
     font-size: 1rem;
     border: none;
-    border-radius: 30px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
   }
 
   .btn-login {
-    background-color: #27210f;
-    color: #fff;
+    width: 100%;
+    background-color: #f5f5f5;
+    border: 2px solid #27210f;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    border-color: #000;
+    /* border-radius: 30px; */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
   }
 
-  .btn:hover {
-    transform: scale(1.05);
+  .btn-login:hover {
+    background: black;
+    color: white;
+    font-weight: bold;
+    transform: translateY(-3px);
+    box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.5);
   }
 
   .error-message {
-    margin: 10px;
     color: #d9534f;
-    font-size: 0.675rem;
+    font-size: 0.875rem;
     position: absolute;
     top: 100%;
     left: 0;
@@ -145,13 +197,12 @@
   }
 
   .new-user a {
-    color: #fda085;
+    color: black;
     text-decoration: none;
-    transition: color 0.3s;
   }
 
   .new-user a:hover {
-    color: #f6d365;
+    color: black;
   }
 
   @keyframes fadeIn {
@@ -173,6 +224,8 @@
   }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
@@ -183,56 +236,67 @@
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }
-
+  
   loginButton.addEventListener("click", async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    let valid = true;
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  let valid = true;
 
-    document
-      .querySelectorAll(".error-message")
-      .forEach((msg) => (msg.textContent = ""));
-    emailInput.classList.remove("error");
-    passwordInput.classList.remove("error");
+  document
+    .querySelectorAll(".error-message")
+    .forEach((msg) => (msg.textContent = ""));
+  emailInput.classList.remove("error");
+  passwordInput.classList.remove("error");
 
-    if (!email || !isValidEmail(email)) {
-      document.getElementById("email-error").textContent =
-        "*Please enter a valid email address.";
-      emailInput.classList.add("error");
-      valid = false;
-    }
+  if (!email || !isValidEmail(email)) {
+    document.getElementById("email-error").textContent =
+      "*Please enter a valid email address.";
+    emailInput.classList.add("error");
+    valid = false;
+  }
 
-    if (!password) {
-      document.getElementById("password-error").textContent =
-        "*Password is required.";
-      passwordInput.classList.add("error");
-      valid = false;
-    }
+  if (!password) {
+    document.getElementById("password-error").textContent =
+      "*Password is required.";
+    passwordInput.classList.add("error");
+    valid = false;
+  }
 
-    if (!valid) return;
+  if (!valid) return;
 
-    try {
-      const response = await fetch("/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+  try {
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("token", data.token);
+      window.location.href = "/dashboard";
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "The email or password is incorrect",
+        confirmButtonText: "Try Again",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        window.location.href = "/dashboard";
-      } else {
-        loginError.textContent = "The email or password is incorrect";
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      loginError.textContent = "An error occurred. Please try again later.";
     }
-  });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "An error occurred. Please try again later.",
+      confirmButtonText: "Ok",
+    });
+  }
+});
+
 </script>

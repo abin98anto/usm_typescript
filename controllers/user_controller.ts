@@ -61,7 +61,7 @@ async function render_user_dashboard(req: Request, res: Response) {
 // To check if email exists in our database.
 async function check_email(req: Request, res: Response) {
   try {
-    const { email } = req.body;
+    const { email } = req.query;
 
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
